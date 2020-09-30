@@ -6,52 +6,35 @@ Azure Private Endpoint is the fundamental building block for Private Link in
 Azure. It enables Azure resources, like virtual machines (VMs), to communicate
 privately with Private Link resources.
 
-The following table describes the network topologies supported by Private Link
-on Azure Files. It also briefly describes what setup is needed for setting it
-up.
-
-| Topology \# | Connect To               | Connect From                                                                    | Use                                                                                                            |
-|-------------|--------------------------|---------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| 1           | **NFS Private Endpoint** | Clients in the same VNet as Storage account private endpoint (any subnet)       | Create a Private Endpoint on Storage account and mount using storageaccount.privatelink.file.core.windows.net. |
-| 2           | **NFS Private Endpoint** | Clients in a peered VNet (same region) as Storage account private endpoint      | Create a Private Endpoint on Storage account.                                                                  |
-| 3           | **NFS Private Endpoint** | Clients in a peered VNet (different region) as Storage account private endpoint | Create a Private Endpoint on Storage account.                                                                  |
-| 4           | **NFS Private Endpoint** | Client is in an onprem network                                                  | Express route                                                                                                  |
-| 5           | **NFS Private Endpoint** | Client is in an onprem network that does not have Express Route                 | Site to Site VPN                                                                                               |
-| 6           | **NFS Private Endpoint** | Standalone Client onprem (not in an network)                                    | Point to Site VPN                                                                                              |
-
 Following diagram summarizes various possible connectivity using Private Link in
 conjunction with Azure Files NFS
 
-![](media/f6218345105416de8b7a7eee140f07f2.png)
+![](f6218345105416de8b7a7eee140f07f2.png)
 
-In this Quickstart, we will go over topology \#1 in the table above. You will
-learn how to create a VM on an Azure virtual network, a storage account with an
-NFS v 4.1 file share and add a Private Endpoint using the Azure portal. Then,
-you can securely access the Azure Files NFS v 4.1 share from the VM.
+In this article, we will go over mounting an Azure NFS share on an Azure VM over a private link. You will learn how to create a VM on an Azure virtual network, a storage account with an NFS v 4.1 file share and add a Private Endpoint using the Azure portal. Then, you can securely access the Azure Files NFS v 4.1 share from the VM.
 
 In this article
 ===============
 
-[Sign in to Azure 2](#sign-in-to-azure)
+[Sign in to Azure](#sign-in-to-azure)
 
-[Create a VM 2](#_Toc38912165)
+[Create a VM](#_Toc38912165)
 
-[Virtual network and parameters 2](#virtual-network-and-parameters)
+[Virtual network and parameters](#virtual-network-and-parameters)
 
-[Create the virtual network 2](#create-the-virtual-network)
+[Create the virtual network](#create-the-virtual-network)
 
-[Create virtual machine 3](#create-virtual-machine)
+[Create virtual machine](#create-virtual-machine)
 
-[Create your Private Endpoint 4](#create-your-private-endpoint)
+[Create your Private Endpoint](#create-your-private-endpoint)
 
-[Create an NFS Share 6](#create-an-nfs-share)
+[Create an NFS Share](#create-an-nfs-share)
 
-[Connect to a VM from the internet 6](#connect-to-a-vm-from-the-internet)
+[Connect to a VM from the internet](#connect-to-a-vm-from-the-internet)
 
-[Mount NFS Share privately from the VM
-6](#mount-nfs-share-privately-from-the-vm)
+[Mount NFS Share privately from the VM](#mount-nfs-share-privately-from-the-vm)
 
-[Clean up resources 7](#clean-up-resources)
+[Clean up resources](#clean-up-resources)
 
 Sign in to Azure
 ================
